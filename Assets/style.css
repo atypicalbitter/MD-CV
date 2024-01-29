@@ -5,6 +5,10 @@
     
 }
 
+.aboutMe{
+    padding-bottom: 80px;
+}
+
 .container-fluid {
     background: none !important;
 }
@@ -12,7 +16,7 @@
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden;
+
         }
 
         video {
@@ -21,8 +25,6 @@
             left: 50%;
             min-width: 100%;
             min-height: 100%;
-            width: auto;
-            height: auto;
             transform: translate(-50%, -50%);
             z-index: -1;
         }
@@ -49,7 +51,7 @@
 body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 video {
@@ -83,3 +85,43 @@ p {
     margin: 0;
 }
 
+
+.card-title {
+    text-align: center;
+}
+
+.card-text {
+    text-align: center;
+    font-size: 1em;
+    margin-left: 18%;
+    margin-right: 18%;
+}
+
+.card {
+    background: none !important;
+    border-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+
+
+.card-body{
+    margin: 0 !important;
+    padding: 0 !important;
+    border-style: none !important;
+}
+
+.webApp {
+    margin-top: 200px;
+    margin-bottom: 100px;
+}
+
+h5 {
+    font-size: 2em !important;
+}
+
+.nav-link {
+    margin: 50px !important;
+}
