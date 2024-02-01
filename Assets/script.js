@@ -1,85 +1,37 @@
 
-    $(document).ready(function () {
-        $('.read-more').click(function () {
-            $(this).prev('.card-text').toggleClass('expanded');
-            
-
-            var newText = $(this).prev('.card-text').hasClass('expanded') ? 'Read Less' : 'Read More';
-            $(this).text(newText);
+    document.addEventListener('DOMContentLoaded', function () {
+        window.addEventListener('scroll', function () {
+            const parallaxSections = document.querySelectorAll('.parallax-section');
+    
+            parallaxSections.forEach(function (section) {
+                const distanceFromTop = section.getBoundingClientRect().top;
+                const speed = section.dataset.speed;
+    
+                section.querySelector('.parallax-background').style.transform = `translateY(${distanceFromTop * speed}px)`;
+            });
         });
     });
+    
 
+     const welcomeHeading = document.getElementById('welcome-heading');
+    const portfolioHeading = document.getElementById('portfolio-heading');
 
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.3
+    };
 
-    const chars = ['$','%','#','@','&','(',')','=','*','/'];
-    const charsTotal = chars.length;
-    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-    class Entry {
-        constructor(el) {
-            this.DOM = {el: el};
-            this.DOM.image = this.DOM.el.querySelector('.content__img');
-            this.DOM.title = {word: this.DOM.el.querySelector('.content__text')};
-            charming(this.DOM.title.word);
-            this.DOM.title.letters = Array.from(this.DOM.title.word.querySelectorAll('span'));
-            this.DOM.title.letters.forEach(letter => letter.dataset.initial = letter.innerHTML);
-            this.lettersTotal = this.DOM.title.letters.length;
-            observer.observe(this.DOM.el);
-        }  
-        enter(direction = 'down') {
-            this.DOM.title.word.style.opacity = 1;
-            
-            this.timeouts = [];
-            this.complete = false;
-            let cnt = 0;
-            this.DOM.title.letters.forEach((letter, pos) => {
-                const timeout = setTimeout(() => {
-                    letter.innerHTML = chars[getRandomInt(0,charsTotal-1)];
-                    setTimeout(() => {
-                        letter.innerHTML = letter.dataset.initial;
-                        ++cnt;
-                        if ( cnt === this.lettersTotal ) {
-                            this.complete = true;
-                        }
-                    }, 100);
-                }, pos*80);
-                this.timeouts.push(timeout);
-            });
-        }
-        exit(direction = 'down') {
-            this.DOM.title.word.style.opacity = 0;
-            if ( this.complete ) return;
-            for ( let i = 0, len = this.timeouts.length; i <= len - 1; ++i ) {
-                clearTimeout(this.timeouts[i]);
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.remove('hide-on-scroll');
+            } else {
+                entry.target.classList.add('hide-on-scroll');
             }
-        }  
-    }
+        });
+    }, observerOptions);
 
-    let observer;
-    let current = -1;
-    let allentries = [];
-    const sections = Array.from(document.querySelectorAll('.content__section'));
-    // Preload all the images in the page..
-	imagesLoaded(document.querySelectorAll('.content__img'), () => {
-        document.body.classList.remove('loading');
-        if ('IntersectionObserver' in window) {
-            document.body.classList.add('ioapi');
+    observer.observe(welcomeHeading);
+    observer.observe(portfolioHeading);
 
-            observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if ( entry.intersectionRatio > 0.5 ) {
-                        const newcurrent = sections.indexOf(entry.target);
-                        if ( newcurrent === current ) return;
-                        const direction = newcurrent > current;
-                        if (current >= 0 ) {
-                            allentries[current].exit(direction ? 'down' : 'up');
-                        }
-                        allentries[newcurrent].enter(direction ? 'down' : 'up');
-                        current = newcurrent;
-                    }
-                });
-            }, { threshold: 0.5 });
-            
-            sections.forEach(section => allentries.push(new Entry(section)));
-        }
-    });
